@@ -134,10 +134,11 @@ class DependencyAgent:
 
     def _run_bootstrap_and_validate(self, venv_dir, requirements_source):
         """
-        Creates a complete, validated environment using the universal two-step install process.
+        Creates a complete, validated environment using the universal, conditional two-step install.
         """
         python_executable = str((venv_dir / "bin" / "python").resolve())
-        
+        project_dir = self.config.get("VALIDATION_CONFIG", {}).get("project_dir")
+
         # --- THE DEFINITIVE, UNIVERSAL 2-STEP INSTALL ---
         
         # Step 1: Install all dependencies from the single requirements file.
@@ -148,16 +149,16 @@ class DependencyAgent:
         if returncode_deps != 0:
             return False, None, f"Failed to install dependencies from {requirements_source.name}. Error: {stderr_deps}"
 
-        # Step 2: Install the project itself (if it's configured as an installable package).
+        # Step 2: (CONDITIONAL) Install the project itself.
         if self.config.get("IS_INSTALLABLE_PACKAGE", False):
-            # Heuristic to get the project directory name (e.g., 'requests_repo' from 'requests_repo/tests')
-            project_path = self.config["VALIDATION_CONFIG"]["pytest_target"].split('/')[0]
             project_extras = self.config.get("PROJECT_EXTRAS", "")
-            print(f"\n--> Bootstrap Step 2: Installing project '{project_path}' in editable mode...")
-            pip_command_project = [python_executable, "-m", "pip", "install", f"-e ./{project_path}{project_extras}"]
+            print(f"\n--> Bootstrap Step 2: Installing project '{project_dir}' in editable mode...")
+            pip_command_project = [python_executable, "-m", "pip", "install", f"-e ./{project_dir}{project_extras}"]
             _, stderr_project, returncode_project = run_command(pip_command_project, cwd=".")
             if returncode_project != 0:
-                return False, None, f"Failed to install project '{project_path}'. Error: {stderr_project}"
+                return False, None, f"Failed to install project '{project_dir}'. Error: {stderr_project}"
+        else:
+            print("\n--> Bootstrap Step 2: Skipped project installation (IS_INSTALLABLE_PACKAGE is false).")
         
         # --- END OF 2-STEP INSTALL ---
 
@@ -169,7 +170,7 @@ class DependencyAgent:
         installed_packages_output, _, _ = run_command([python_executable, "-m", "pip", "freeze"])
         final_packages = self._prune_pip_freeze(installed_packages_output)
         return True, {"metrics": metrics, "packages": final_packages}, None
-
+    
     def run(self):
         if os.path.exists(self.config["METRICS_OUTPUT_FILE"]):
             os.remove(self.config["METRICS_OUTPUT_FILE"])
@@ -338,8 +339,7 @@ class DependencyAgent:
         if venv_dir.exists(): shutil.rmtree(venv_dir)
         venv.create(venv_dir, with_pip=True)
         python_executable = str((venv_dir / "bin" / "python").resolve())
-
-        # --- THE DEFINITIVE, UNIVERSAL 2-STEP PROBE ---
+        project_dir = self.config.get("VALIDATION_CONFIG", {}).get("project_dir")
 
         # Step 1: Install the proposed dependency set.
         print("--> Probe Step 1: Installing the proposed dependency set...")
@@ -348,14 +348,8 @@ class DependencyAgent:
             for line in f_read:
                 line = line.strip()
                 if not line or line.startswith('#'): continue
-                
-                # Use our robust name parser.
-                pkg_name = self._get_package_name_from_spec(line)
-                
-                if pkg_name and pkg_name.lower() == package_to_update.lower():
-                    marker_part = ""
-                    if ';' in line: marker_part = " ;" + line.split(";", 1)[1]
-                    f_write.write(f"{package_to_update}=={new_version}{marker_part}\n")
+                if self._get_package_name_from_spec(line) == package_to_update:
+                    f_write.write(f"{package_to_update}=={new_version}\n")
                 else:
                     f_write.write(f"{line}\n")
 
@@ -363,30 +357,25 @@ class DependencyAgent:
         _, stderr_core, returncode_core = run_command(pip_command_core, cwd=".")
         if returncode_core != 0:
             summary = self._get_error_summary(stderr_core)
-            end_group()
-            return False, f"Dependency installation failed: {summary}", stderr_core
+            end_group(); return False, f"Dependency installation failed: {summary}", stderr_core
 
-        # Step 2: Install the project itself (if applicable).
+        # Step 2: (CONDITIONAL) Install the project itself.
         if self.config.get("IS_INSTALLABLE_PACKAGE", False):
-            # Heuristic to get the project directory name
-            project_path = self.config["VALIDATION_CONFIG"]["pytest_target"].split('/')[0]
             project_extras = self.config.get("PROJECT_EXTRAS", "")
-            print(f"\n--> Probe Step 2: Installing project '{project_path}'...")
-            pip_command_project = [python_executable, "-m", "pip", "install", f"-e ./{project_path}{project_extras}"]
+            print(f"\n--> Probe Step 2: Installing project '{project_dir}'...")
+            pip_command_project = [python_executable, "-m", "pip", "install", f"-e ./{project_dir}{project_extras}"]
             _, stderr_project, returncode_project = run_command(pip_command_project, cwd=".")
             if returncode_project != 0:
                 summary = self._get_error_summary(stderr_project)
-                end_group()
-                return False, f"Project installation failed: {summary}", stderr_project
+                end_group(); return False, f"Project installation failed: {summary}", stderr_project
+        else:
+            print(f"\n--> Probe Step 2: Skipped project installation (IS_INSTALLABLE_PACKAGE is false).")
         
-        # --- END OF 2-STEP PROBE ---
-
         # Step 3: Run Validation.
         print("\n--> Probe Step 3: Running validation suite...")
         success, metrics, validation_output = validate_changes(python_executable, self.config)
         if not success:
-            end_group()
-            return False, "Validation script failed", validation_output
+            end_group(); return False, "Validation script failed", validation_output
 
         print("--> SUCCESS: Probe passed.")
         end_group()
