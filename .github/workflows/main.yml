@@ -38,7 +38,7 @@ jobs:
         with:
           path: ~/.cache/pip
           # The key is now based on the Mask_RCNN requirements file
-          key: ${{ runner.os }}-pip-maskrcnn-${{ hashFiles('Mask_RCNN/requirements.txt') }}
+          key: ${{ runner.os }}-pip-maskrcnn-${{ hashFiles('requirements.txt') }}
           restore-keys: |
             ${{ runner.os }}-pip-maskrcnn-
 
