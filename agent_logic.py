@@ -131,37 +131,29 @@ class DependencyAgent:
         sys.exit("CRITICAL ERROR: Bootstrap failed. Please provide a working set of requirements.")
     
     # In agent_logic.py
-
     def _run_bootstrap_and_validate(self, venv_dir, requirements_source):
-        """
-        Creates a complete, validated environment using the universal, conditional two-step install.
-        """
         python_executable = str((venv_dir / "bin" / "python").resolve())
         project_dir = self.config.get("VALIDATION_CONFIG", {}).get("project_dir")
+        if not project_dir: return False, None, "FATAL: 'project_dir' not defined in AGENT_CONFIG."
 
-        # --- THE DEFINITIVE, UNIVERSAL 2-STEP INSTALL ---
-        
-        # Step 1: Install all dependencies from the single requirements file.
-        print(f"--> Bootstrap Step 1: Installing all dependencies from '{requirements_source.name}'...")
+        # Step 1: Install all dependencies from the requirements file.
+        print(f"--> Bootstrap Step 1: Installing dependencies from '{requirements_source.name}'...")
         req_path = str(requirements_source.resolve())
         pip_command_deps = [python_executable, "-m", "pip", "install", "-r", req_path]
-        _, stderr_deps, returncode_deps = run_command(pip_command_deps, cwd=".")
+        _, stderr_deps, returncode_deps = run_command(pip_command_deps, cwd=project_dir) # <-- CWD IS CORRECT
         if returncode_deps != 0:
-            return False, None, f"Failed to install dependencies from {requirements_source.name}. Error: {stderr_deps}"
+            return False, None, f"Failed to install dependencies: {stderr_deps}"
 
-        # Step 2: (CONDITIONAL) Install the project itself.
+        # Step 2: Install the project itself (if applicable).
         if self.config.get("IS_INSTALLABLE_PACKAGE", False):
             project_extras = self.config.get("PROJECT_EXTRAS", "")
             print(f"\n--> Bootstrap Step 2: Installing project '{project_dir}' in editable mode...")
-            pip_command_project = [python_executable, "-m", "pip", "install", f"-e ./{project_dir}{project_extras}"]
-            _, stderr_project, returncode_project = run_command(pip_command_project, cwd=".")
+            # THE COMMAND IS NOW SIMPLE AND CORRECT
+            pip_command_project = [python_executable, "-m", "pip", "install", f"-e .{project_extras}"]
+            _, stderr_project, returncode_project = run_command(pip_command_project, cwd=project_dir) # <-- CWD IS CORRECT
             if returncode_project != 0:
-                return False, None, f"Failed to install project '{project_dir}'. Error: {stderr_project}"
-        else:
-            print("\n--> Bootstrap Step 2: Skipped project installation (IS_INSTALLABLE_PACKAGE is false).")
+                return False, None, f"Failed to install project: {stderr_project}"
         
-        # --- END OF 2-STEP INSTALL ---
-
         print("\n--> Bootstrap Step 3: Running validation suite...")
         success, metrics, validation_output = validate_changes(python_executable, self.config)
         if not success:
@@ -331,15 +323,15 @@ class DependencyAgent:
         except Exception: return None
 
     # In agent_logic.py
-
     def _try_install_and_validate(self, package_to_update, new_version, dynamic_constraints, baseline_reqs_path, is_probe):
         start_group(f"Probe: Install & Validate for {package_to_update}=={new_version}")
-        
         venv_dir = Path("./temp_venv")
         if venv_dir.exists(): shutil.rmtree(venv_dir)
         venv.create(venv_dir, with_pip=True)
         python_executable = str((venv_dir / "bin" / "python").resolve())
-        project_dir = self.config.get("VALIDATION_CONFIG", {}).get("project_dir")
+        project_dir = self.config["VALIDATION_CONFIG"].get("project_dir")
+        if not project_dir:
+            end_group(); return False, "Configuration error: project_dir not set", ""
 
         # Step 1: Install the proposed dependency set.
         print("--> Probe Step 1: Installing the proposed dependency set...")
@@ -354,7 +346,7 @@ class DependencyAgent:
                     f_write.write(f"{line}\n")
 
         pip_command_core = [python_executable, "-m", "pip", "install", "-r", str(temp_reqs_path.resolve())]
-        _, stderr_core, returncode_core = run_command(pip_command_core, cwd=".")
+        _, stderr_core, returncode_core = run_command(pip_command_core, cwd=project_dir) # <-- CWD IS CORRECT
         if returncode_core != 0:
             summary = self._get_error_summary(stderr_core)
             end_group(); return False, f"Dependency installation failed: {summary}", stderr_core
@@ -363,13 +355,12 @@ class DependencyAgent:
         if self.config.get("IS_INSTALLABLE_PACKAGE", False):
             project_extras = self.config.get("PROJECT_EXTRAS", "")
             print(f"\n--> Probe Step 2: Installing project '{project_dir}'...")
-            pip_command_project = [python_executable, "-m", "pip", "install", f"-e ./{project_dir}{project_extras}"]
-            _, stderr_project, returncode_project = run_command(pip_command_project, cwd=".")
+            # THE COMMAND IS NOW SIMPLE AND CORRECT
+            pip_command_project = [python_executable, "-m", "pip", "install", f"-e .{project_extras}"]
+            _, stderr_project, returncode_project = run_command(pip_command_project, cwd=project_dir) # <-- CWD IS CORRECT
             if returncode_project != 0:
                 summary = self._get_error_summary(stderr_project)
                 end_group(); return False, f"Project installation failed: {summary}", stderr_project
-        else:
-            print(f"\n--> Probe Step 2: Skipped project installation (IS_INSTALLABLE_PACKAGE is false).")
         
         # Step 3: Run Validation.
         print("\n--> Probe Step 3: Running validation suite...")
