@@ -1,0 +1,87 @@
+name: Autonomous Dependency Updater for Mask R-CNN
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 */3 * *'
+
+jobs:
+  update-dependencies:
+    runs-on: ubuntu-latest
+    
+    defaults:
+      run:
+        working-directory: ${{ github.workspace }}
+
+    steps:
+      - name: Checkout Agent Repository
+        uses: actions/checkout@v4
+
+      - name: Clone Mask R-CNN Repository
+        # We clone it into a specific directory name to avoid any potential import issues.
+        run: git clone https://github.com/matterport/Mask_RCNN.git 
+
+      # --- NEW STEP: Install System-Level Dependencies ---
+      # Mask R-CNN and its dependencies (like opencv-python) may need these.
+      - name: Install System Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libgl1-mesa-glx libglib2.0-0
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Cache pip packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          # The key is now based on the Mask_RCNN requirements file
+          key: ${{ runner.os }}-pip-maskrcnn-${{ hashFiles('Mask_RCNN/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-maskrcnn-
+
+      - name: Install Agent Dependencies
+        run: |
+          # We no longer need the "nuke and pave" for google-generativeai
+          # as we are managing our toolchain more explicitly.
+          python -m pip install \
+            google-generativeai \
+            pypi-simple \
+            packaging \
+            "pip-tools==6.13.0"
+
+      - name: Run the Autonomous Agent
+        run: python dependency_agent.py
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          # --- This now points to our new project ---
+          PROJECT_ID: "mask_rcnn"
+      
+      - name: Commit and push changes if any
+        run: |
+          git config --global user.name 'AURA Dependency Agent'
+          git config --global user.email 'aura-agent@users.noreply.github.com'
+          
+          # --- The TARGET_FILE is now the one inside the Mask_RCNN directory ---
+          TARGET_FILE="Mask_RCNN/requirements.txt"
+          
+          # Clean up all temporary directories before checking git status
+          rm -rf temp_venv final_venv bootstrap_venv temp_pip_check initial_check_venv
+          
+          git add $TARGET_FILE
+          if git diff-index --quiet HEAD; then
+            echo "No dependency changes to commit."
+            exit 0
+          fi
+          
+          echo "Dependencies have changed. Committing and pushing..."
+          
+          COMMIT_BODY="Automated dependency updates for the Mask R-CNN project."
+          if [ -f metrics_output.txt ]; then
+            COMMIT_BODY=$(cat metrics_output.txt)
+          fi
+          
+          git commit -m "chore(deps): Autonomously manage Mask R-CNN dependencies [skip ci]" -m "$COMMIT_BODY"
+          git push
