@@ -48,7 +48,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-maskrcnn-${{ hashFiles('Mask_RCNN/requirements.txt') }}
+          key: ${{ runner.os }}-pip-maskrcnn-${{ hashFiles('requirements.txt') }}
 
       - name: Run the Autonomous Agent
         run: python dependency_agent.py
