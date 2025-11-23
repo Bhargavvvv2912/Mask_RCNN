@@ -13,7 +13,7 @@ AGENT_CONFIG = {
     # A unique name for the project.
     "PROJECT_NAME": "maskrcnn",
     "IS_INSTALLABLE_PACKAGE": True, 
-    "project_dir": "Mask_RCNN",
+
 
     # This is the "Golden Record" lock file that the agent will manage.
     "REQUIREMENTS_FILE": "requirements.txt",
@@ -26,6 +26,7 @@ AGENT_CONFIG = {
         "type": "script",
         # It correctly points to our dedicated validation script for this project.
         "smoke_test_script": "validation_maskrcnn.py",
+        "project_dir": "Mask_RCNN",
     },
     
     # All other standard settings
