@@ -2,8 +2,6 @@ name: Autonomous Dependency Updater for Mask R-CNN
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '0 0 */3 * *'
 
 jobs:
   update-dependencies:
@@ -11,18 +9,23 @@ jobs:
     
     defaults:
       run:
+        # The default working directory is now the root, where the agent's code lives.
         working-directory: ${{ github.workspace }}
 
     steps:
+      # --- START OF THE DEFINITIVE FIX ---
+      # STEP 1: Check out the AGENT's repository. This brings in dependency_agent.py etc.
       - name: Checkout Agent Repository
         uses: actions/checkout@v4
 
+      # STEP 2: Check out the TARGET repository into a specific subdirectory.
       - name: Clone Mask R-CNN Repository
-        # We clone it into a specific directory name to avoid any potential import issues.
-        run: git clone https://github.com/matterport/Mask_RCNN.git 
+        uses: actions/checkout@v4
+        with:
+          repository: matterport/Mask_RCNN
+          path: Mask_RCNN # Clone it into a folder named 'Mask_RCNN'
+      # --- END OF THE DEFINITIVE FIX ---
 
-      # --- NEW STEP: Install System-Level Dependencies ---
-      # Mask R-CNN and its dependencies (like opencv-python) may need these.
       - name: Install System Dependencies
         run: |
           sudo apt-get update
@@ -33,30 +36,24 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Cache pip packages
-        uses: actions/cache@v3
-        with:
-          path: ~/.cache/pip
-          # The key is now based on the Mask_RCNN requirements file
-          key: ${{ runner.os }}-pip-maskrcnn-${{ hashFiles('requirements.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-maskrcnn-
-
       - name: Install Agent Dependencies
         run: |
-          # We no longer need the "nuke and pave" for google-generativeai
-          # as we are managing our toolchain more explicitly.
           python -m pip install \
             google-generativeai \
             pypi-simple \
             packaging \
             "pip-tools==6.13.0"
 
+      - name: Cache pip packages for the Target
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-maskrcnn-${{ hashFiles('Mask_RCNN/requirements.txt') }}
+
       - name: Run the Autonomous Agent
         run: python dependency_agent.py
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          # --- This now points to our new project ---
           PROJECT_ID: "mask_rcnn"
       
       - name: Commit and push changes if any
@@ -64,10 +61,9 @@ jobs:
           git config --global user.name 'AURA Dependency Agent'
           git config --global user.email 'aura-agent@users.noreply.github.com'
           
-          # --- The TARGET_FILE is now the one inside the Mask_RCNN directory ---
           TARGET_FILE="Mask_RCNN/requirements.txt"
           
-          # Clean up all temporary directories before checking git status
+          # Clean up agent's temp directories before checking git status.
           rm -rf temp_venv final_venv bootstrap_venv temp_pip_check initial_check_venv
           
           git add $TARGET_FILE
@@ -77,11 +73,8 @@ jobs:
           fi
           
           echo "Dependencies have changed. Committing and pushing..."
-          
-          COMMIT_BODY="Automated dependency updates for the Mask R-CNN project."
-          if [ -f metrics_output.txt ]; then
-            COMMIT_BODY=$(cat metrics_output.txt)
-          fi
-          
-          git commit -m "chore(deps): Autonomously manage Mask R-CNN dependencies [skip ci]" -m "$COMMIT_BODY"
+          git commit -m "chore(deps): Autonomously manage Mask R-CNN dependencies [skip ci]"
+          # This push will commit to YOUR agent's repository. This is another architectural decision.
+          # If you want to push to the Mask_RCNN repo, the checkout logic needs to be different.
+          # For now, this is the simplest, most correct setup.
           git push
