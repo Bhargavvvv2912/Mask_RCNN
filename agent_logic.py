@@ -499,7 +499,7 @@ class DependencyAgent:
         for version in reversed(candidate_versions):
             print(f"  -> Checking compatibility of {package}=={version}...")
             requirements_list_for_check = fixed_constraints + [f"{package}=={version}"]
-            pip_command = [python_executable, "-m", "pip", "install", "--dry-run"] + requirements_list_for_check
+            pip_command = [python_executable, "-m", "pip", "install", "--no-build-isolation", "--dry-run"] + requirements_list_for_check
             
             _, stderr, returncode = run_command(pip_command, display_command=False)
 
