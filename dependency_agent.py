@@ -26,7 +26,6 @@ AGENT_CONFIG = {
         "type": "script",
         # It correctly points to our dedicated validation script for this project.
         "smoke_test_script": "validation_maskrcnn.py",
-        "project_dir": "Mask_RCNN",
     },
     
     # All other standard settings

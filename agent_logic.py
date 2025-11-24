@@ -290,13 +290,11 @@ class DependencyAgent:
             return max(stable_versions, key=parse_version) if stable_versions else max([p.version for p in package_info.packages if p.version], key=parse_version)
         except Exception: return None
 
-    # In agent_logic.py
-
     def _run_bootstrap_and_validate(self, venv_dir, requirements_source):
         python_executable = str((venv_dir / "bin" / "python").resolve())
-        project_dir_str = self.config.get("VALIDATION_CONFIG", {}).get("project_dir")
-        if not project_dir_str:
-            return False, None, "FATAL: 'project_dir' not defined in AGENT_CONFIG's VALIDATION_CONFIG."
+        
+        # REMOVED: project_dir_str lookup and validation. 
+        # We assume we are in the project root.
 
         # Step 1: Install all dependencies from the requirements file.
         print(f"--> Bootstrap Step 1: Installing dependencies from '{requirements_source.name}'...")
@@ -308,16 +306,14 @@ class DependencyAgent:
 
         # Step 2: Install the project itself (if applicable).
         if self.config.get("IS_INSTALLABLE_PACKAGE", False):
-            # --- START OF THE DEFINITIVE FIX ---
-            # Construct an absolute path to the project directory.
-            project_path_absolute = str(Path(project_dir_str).resolve())
             project_extras = self.config.get("PROJECT_EXTRAS", "")
-            print(f"\n--> Bootstrap Step 2: Installing project from '{project_path_absolute}' in editable mode...")
+            print(f"\n--> Bootstrap Step 2: Installing project from current directory ('.') in editable mode...")
             
-            # Use the absolute path. The CWD is no longer relevant for this command.
-            pip_command_project = [python_executable, "-m", "pip", "install", f"-e {project_path_absolute}{project_extras}"]
+            # CHANGED: Use "." instead of constructed path
+            # Note: We split "-e" and the path argument for better compatibility
+            pip_command_project = [python_executable, "-m", "pip", "install", "-e", f".{project_extras}"]
+            
             _, stderr_project, returncode_project = run_command(pip_command_project)
-            # --- END OF THE DEFINITIVE FIX ---
             
             if returncode_project != 0:
                 return False, None, f"Failed to install project. Error: {stderr_project}"
@@ -331,8 +327,6 @@ class DependencyAgent:
         final_packages = self._prune_pip_freeze(installed_packages_output)
         return True, {"metrics": metrics, "packages": final_packages}, None
     
-    # In agent_logic.py
-
     def _try_install_and_validate(self, package_to_update, new_version, dynamic_constraints, baseline_reqs_path, is_probe):
         start_group(f"Probe: Install & Validate for {package_to_update}=={new_version}")
         
@@ -341,10 +335,7 @@ class DependencyAgent:
         venv.create(venv_dir, with_pip=True)
         python_executable = str((venv_dir / "bin" / "python").resolve())
         
-        project_dir_str = self.config["VALIDATION_CONFIG"].get("project_dir")
-        if not project_dir_str:
-            end_group()
-            return False, "Configuration error: project_dir not set", ""
+        # REMOVED: project_dir_str lookup and validation.
 
         # Step 1: Install the proposed dependency set.
         print("--> Probe Step 1: Installing the proposed dependency set...")
@@ -372,13 +363,12 @@ class DependencyAgent:
 
         # Step 2: (CONDITIONAL) Install the project itself.
         if self.config.get("IS_INSTALLABLE_PACKAGE", False):
-            # Construct an absolute path to the project directory to avoid all ambiguity.
-            project_path_absolute = str(Path(project_dir_str).resolve())
             project_extras = self.config.get("PROJECT_EXTRAS", "")
-            print(f"\n--> Probe Step 2: Installing project from '{project_path_absolute}'...")
+            print(f"\n--> Probe Step 2: Installing project from current directory ('.')...")
             
-            # Use the absolute path. The CWD is no longer relevant for this command's pathing.
-            pip_command_project = [python_executable, "-m", "pip", "install", f"-e{project_path_absolute}{project_extras}"]
+            # CHANGED: Use "." instead of constructed path
+            pip_command_project = [python_executable, "-m", "pip", "install", "-e", f".{project_extras}"]
+            
             _, stderr_project, returncode_project = run_command(pip_command_project)
             if returncode_project != 0:
                 summary = self._get_error_summary(stderr_project)
