@@ -5,208 +5,184 @@ import json
 from google.api_core.exceptions import ResourceExhausted
 
 class ExpertAgent:
-    """
-    The "Expert" Agent (CORE). 
-    A Neuro-Symbolic reasoning engine designed for dependency constraint optimization.
-    It separates deterministic signal extraction (Regex) from stochastic planning (LLM).
-    """
     def __init__(self, llm_client):
         self.llm = llm_client
         self.llm_available = True
 
     def _clean_json_response(self, text: str) -> str:
-        """Sanitizes LLM output to ensure valid JSON parsing."""
+        """Sanitizes LLM output."""
         cleaned = text.strip()
-        # Remove markdown code blocks if present (e.g. ```json ... ```)
         if cleaned.startswith("```"):
             cleaned = re.sub(r"^```[a-zA-Z]*\n", "", cleaned)
             cleaned = re.sub(r"\n```$", "", cleaned)
         return cleaned.strip()
 
-    def _extract_key_constraints(self, error_log: str) -> list:
+    def _extract_constraint_details(self, error_log: str) -> list:
         """
-        Extracts high-signal constraint lines from verbose pip logs.
-        Used to create a dense context for the LLM summary.
+        Extracts the full constraint strings with versions.
+        Example output: ['langchain-core<0.2', 'langchain==0.1.0']
         """
-        key_lines = []
-        patterns = [
-            r"^\s*([a-zA-Z0-9\-_]+.* requires .*)$",
-            r"^\s*([a-zA-Z0-9\-_]+.* depends on .*)$",
-            r"^\s*(The user requested .*)$",
-            r"^\s*(Incompatible versions: .*)$",
-            r"^\s*(Conflict: .*)$"
-        ]
+        constraints = []
+        # Pattern: Package name followed by version operator and version number
+        # Captures the whole string like "numpy<2.0" or "pandas==1.5.3"
+        pattern = re.compile(r"([a-zA-Z0-9\-_]+(?:==|>=|<=|~=|!=|<|>)[0-9\.]+)")
         
-        for pat in patterns:
-            for match in re.finditer(pat, error_log, re.MULTILINE):
-                key_lines.append(match.group(1).strip())
+        for match in pattern.finditer(error_log):
+            c = match.group(1)
+            # Filter out noise
+            if not any(x in c for x in ['python', 'setup', 'pip']):
+                constraints.append(c)
         
-        # Deduplicate and return top 10 to maintain context window efficiency
-        return list(set(key_lines))[:10]
+        return list(set(constraints))
 
     def summarize_error(self, error_message: str) -> str:
-        """Generates a concise, one-sentence summary of the root cause."""
-        if not self.llm_available: return "(LLM summary unavailable)"
-        
-        key_constraints = self._extract_key_constraints(error_message)
-        if key_constraints:
-            context = "Key constraint lines:\n" + "\n".join(key_constraints)
-        else:
-            context = error_message[:2000]
+        """
+        Generates a summary.
+        GUARANTEE: If the LLM is vague, we append the raw extracted version constraints.
+        """
+        # 1. Deterministic Extraction of Versions
+        raw_constraints = self._extract_constraint_details(error_message)
+        constraints_str = ", ".join(raw_constraints[:5]) # Top 5 to avoid clutter
 
+        if not self.llm_available:
+            return f"Dependency Conflict. Constraints: {constraints_str}"
+
+        # 2. LLM Summary
         prompt = (
-            "Summarize the root cause of the following Python dependency conflict "
-            "in a single, concise sentence. Focus explicitly on the package names involved. "
-            f"Context: {context}"
+            "Summarize the root cause of this dependency conflict in one sentence. "
+            f"Context: {error_message[:2000]}"
         )
         try:
-            response = self.llm.generate_content(prompt)
-            return response.text.strip().replace('\n', ' ')
-        except Exception:
-            return "Failed to get summary from LLM."
+            llm_summary = self.llm.generate_content(prompt).text.strip().replace('\n', ' ')
+            
+            # 3. The "Truth Enforcement" Append
+            # If the LLM didn't mention specific numbers, we force them in.
+            return f"{llm_summary} [Identified Constraints: {constraints_str}]"
+        except:
+            return f"Dependency Conflict. [Identified Constraints: {constraints_str}]"
 
     def diagnose_conflict_from_log(self, error_log: str) -> list[str]:
         """
-        Extracts ALL conflicting package names using rigorous Regex matching.
-        
-        Methodology:
-        We prioritize Regex over LLMs for this step to ensure 'High Recall'.
-        In a Co-Resolution scenario (especially for the Greedy Heuristic), 
-        we need to identify every package involved in the conflict graph 
-        (including 'bystander' packages), not just the root cause.
+        Extracts ALL conflicting package NAMES (no versions).
+        Used by the Agent to build the 'Updatable Blockers' list.
         """
-        # 1. Define a regex for standard python package specs (e.g. "package>=1.0", "pkg==2.0")
-        #    Matches a valid name followed immediately by a version operator.
-        package_pattern = re.compile(
-            r"(?P<name>[a-zA-Z0-9\-_]+)(?:==|>=|<=|~=|!=|<|>)"
-        )
-        
         found_packages = set()
         
-        # 2. Extract standard specifiers from the log
-        for match in package_pattern.finditer(error_log):
-            name = match.group('name').lower()
-            # Filter out build tools/noise keywords
-            if name not in ['python', 'pip', 'setuptools', 'wheel', 'setup', 'dependencies', 'versions', 'requirement']:
-                found_packages.add(name)
+        # 1. Regex for names associated with version constraints
+        pattern_strict = re.compile(r"(?P<name>[a-zA-Z0-9\-_]+)(?:==|>=|<=|~=|!=|<|>)")
         
-        # 3. Extract natural language conflicts (e.g. "Conflict between package-a and package-b")
-        #    This captures packages that might appear without a version number in the error text.
-        conflict_pattern = re.compile(r"conflict.*(?:between|dependencies|among)\s+(`|')?([a-zA-Z0-9\-_,\s]+)(`|')?", re.IGNORECASE)
+        # 2. Regex for natural language "Conflict between A and B"
+        conflict_pattern = re.compile(r"(?:between|dependencies|among)\s+(`|')?([a-zA-Z0-9\-_,\s]+)(`|')?", re.IGNORECASE)
+
+        for match in pattern_strict.finditer(error_log):
+            name = match.group('name').lower()
+            if self._is_valid_package_name(name): found_packages.add(name)
+
         for match in conflict_pattern.finditer(error_log):
-            raw_text = match.group(2)
-            # Split by comma or space
-            tokens = re.split(r'[,\s]+', raw_text)
+            tokens = re.split(r'[,\s]+', match.group(2))
             for t in tokens:
                 clean_t = t.strip("`'").lower()
-                # Filter out stop words
-                if clean_t and len(clean_t) > 2 and clean_t not in ['and', 'the', 'dependencies', 'versions', 'package']:
-                     found_packages.add(clean_t)
-
+                if self._is_valid_package_name(clean_t): found_packages.add(clean_t)
+        
+        # Sanity check: remove '-' if it appeared
+        if '-' in found_packages: found_packages.remove('-')
+        
         return list(found_packages)
 
+    def _is_valid_package_name(self, name: str) -> bool:
+        noise = {'python', 'pip', 'setuptools', 'wheel', 'setup', 'dependencies', 
+                 'versions', 'requirement', 'conflict', 'between', 'and', 'the', 'version', 'package'}
+        return name and len(name) > 1 and name not in noise
+
     def propose_co_resolution(
-        self, 
-        target_package: str, 
-        error_log: str, 
-        available_updates: dict,
-        current_versions: dict = None,
-        history: list = None
+        self, target_package: str, error_log: str, available_updates: dict,
+        current_versions: dict = None, history: list = None
     ) -> dict | None:
         """
-        Iterative Co-Resolution Planner.
-        Generates a multi-package update plan to resolve dependency deadlocks.
-        
-        Args:
-            target_package: The package we initially tried to update.
-            error_log: The stderr from the failed installation.
-            available_updates: Dict of {pkg: latest_ver} (The "Ceiling").
-            current_versions: Dict of {pkg: installed_ver} (The "Floor").
-            history: List of previous (plan, outcome) tuples for iterative refinement.
+        Iterative Co-Resolution Planner with Chain-of-Thought Reasoning.
         """
         if not self.llm_available: return None
 
-        # Construct constraints strings
         floor_constraints = json.dumps(current_versions, indent=2) if current_versions else "{}"
         ceiling_constraints = json.dumps(available_updates, indent=2)
 
-        # Build History Context (Reinforcement Learning signal)
         history_text = ""
         if history:
-            history_text = "--- PREVIOUS FAILED ATTEMPTS (DO NOT REPEAT) ---\n"
+            history_text = "--- PREVIOUS FAILED ATTEMPTS ---\n"
             for i, (attempt_plan, failure_reason) in enumerate(history):
                 history_text += f"Attempt {i+1} Plan: {attempt_plan}\nResult: FAILED. Reason: {failure_reason}\n\n"
 
+        # --- THE UPGRADED "CHAIN OF THOUGHT" PROMPT ---
         prompt = f"""
         You are CORE (Constraint Optimization & Resolution Expert).
-        Your task is to solve a dependency deadlock by synthesizing a "Co-Resolution Plan".
-
-        OBJECTIVE:
-        Find a set of version configurations that allows '{target_package}' to be updated (if possible) while strictly satisfying all dependency graph constraints.
-        
-        OPTIMIZATION RULES:
-        1. MONOTONICITY: Do not propose versions lower than the CURRENT INSTALLED VERSIONS unless absolutely necessary to solve the conflict.
-        2. MAXIMIZATION: Prefer the HIGHEST possible version from AVAILABLE UPDATES.
-        3. COMPLETENESS: The plan MUST include a version for '{target_package}'.
-        4. PLAUSIBILITY: Only use versions listed in AVAILABLE UPDATES or CURRENT INSTALLED VERSIONS. Do not invent versions.
+        You are solving a hard dependency deadlock for '{target_package}'.
 
         CONTEXT:
         1. Target Package: {target_package}
-        2. Current Installed Versions (The Floor): {floor_constraints}
-        3. Available Updates (The Ceiling): {ceiling_constraints}
-        
-        THE CONFLICT LOG:
+        2. Current Versions (Floor): {floor_constraints}
+        3. Available Updates (Ceiling): {ceiling_constraints}
+
+        ERROR LOG:
         {error_log}
 
         {history_text}
 
-        YOUR TASK:
-        Analyze the conflict. Return a JSON object with:
-        - "plausible": boolean (true if a solution exists within constraints)
-        - "proposed_plan": list of strings ["package==version", ...]
+        YOUR MISSION:
+        You must find a combination of versions that satisfies the conflict.
+        
+        INSTRUCTIONS - THINK STEP-BY-STEP:
+        1. ANALYZE CONSTRAINTS: Look at the error log. Identify exactly which package is demanding which version (e.g. "PkgA requires PkgB < 2.0").
+        2. COMPARE WITH OPTIONS: Look at the 'Available Updates'.
+           - If the log says "Requires B < 2.0" and Available Updates has "B": "3.0", you MUST NOT use the new B. You must hold B back.
+           - If the log says "Requires C >= 1.5" and Available Updates has "C": "1.8", you SHOULD use the new C.
+        3. FORMULATE PLAN: Construct a list of 'package==version' strings.
+           - You can pick the "Ceiling" version (Update).
+           - You can pick the "Floor" version (Hold Back).
+           - You CANNOT invent versions not in Floor or Ceiling.
+
+        RESPONSE FORMAT:
+        You must output your reasoning first, followed by the JSON block.
+        
+        Reasoning: [Your step-by-step logic here]
+        ```json
+        {{
+            "plausible": true,
+            "proposed_plan": ["package==version", ...]
+        }}
+        ```
         """
 
         try:
             response = self.llm.generate_content(prompt)
-            clean_text = self._clean_json_response(response.text)
+            # We now need to extract the JSON from the potential text block
+            text = response.text
             
-            match = re.search(r'\{.*\}', clean_text, re.DOTALL)
-            if not match:
-                print(f"  -> LLM_WARNING: Invalid JSON structure.")
-                return None
+            # Robust Extraction: Find the last JSON code block or the first JSON object
+            json_match = re.search(r'```json\s*(\{.*?\})\s*```', text, re.DOTALL)
+            if not json_match:
+                # Fallback: look for just braces
+                json_match = re.search(r'(\{.*\})', text, re.DOTALL)
             
-            plan = json.loads(match.group(0))
+            if not json_match: return None
             
+            plan_json_str = json_match.group(1)
+            plan = json.loads(plan_json_str)
+            
+            # Validation Logic (Same as before)
             if plan.get("plausible") and isinstance(plan.get("proposed_plan"), list):
-                # STRICT VALIDATION: Anti-Hallucination Check
                 valid_plan = []
                 for requirement in plan.get("proposed_plan", []):
                     try:
                         pkg, ver = requirement.split('==')
-                        
-                        # Case A: It's a known "New" version (from Ceiling)
-                        if pkg in available_updates and available_updates[pkg] == ver:
+                        if (pkg in available_updates and available_updates[pkg] == ver) or \
+                           (current_versions and pkg in current_versions and current_versions[pkg] == ver):
                             valid_plan.append(requirement)
-                        
-                        # Case B: It's a known "Current" version (from Floor)
-                        # The Expert decided we must hold this package back to solve the conflict.
-                        elif current_versions and pkg in current_versions and current_versions[pkg] == ver:
-                            valid_plan.append(requirement)
-                        
-                        else:
-                            print(f"  -> LLM_WARNING: Hallucinated version detected and filtered: {requirement}")
-                            # We filter it out to prevent crashing pip. 
-                            # If the plan relied on this hallucination, validation will likely fail later, which is fine.
-                    except ValueError:
-                        continue
+                    except ValueError: continue
                 
-                if not valid_plan:
-                    return {"plausible": False, "proposed_plan": []}
-                
+                if not valid_plan: return {"plausible": False, "proposed_plan": []}
                 plan["proposed_plan"] = valid_plan
                 return plan
-                
             return None
-        except (json.JSONDecodeError, AttributeError, Exception) as e:
-            print(f"  -> LLM_ERROR: Co-Resolution generation failed: {e}")
+        except Exception as e:
+            print(f"  -> LLM_ERROR: {e}")
             return None
