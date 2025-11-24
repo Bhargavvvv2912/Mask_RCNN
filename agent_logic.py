@@ -427,7 +427,17 @@ class DependencyAgent:
         available_updates = self.get_available_updates_from_plan()
         
         # Find blockers that are NOT the package we're currently trying to heal.
-        other_blockers = [b for b in blockers if b.lower() != package.lower()]
+        # We also filter out the project name itself (e.g. 'mask-rcnn') and 'pip'
+        # because we can't "update" the project via PyPI, nor can we update pip here.
+        project_name = self.config.get("PROJECT_NAME", "").lower().replace('_', '-')
+        
+        other_blockers = [
+            b for b in blockers 
+            if b.lower() != package.lower() 
+            and b.lower() != project_name
+            and b.lower() != "pip"
+            and b.lower() != "setuptools"
+        ]
         
         updatable_blockers = {
             pkg: ver for pkg, ver in available_updates.items() 

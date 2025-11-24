@@ -112,24 +112,28 @@ class ExpertAgent:
 
     def diagnose_conflict_from_log(self, error_log: str) -> list[str]:
         """
-        Analyzes a pip error log and returns a structured list of conflicting package names.
+        Analyzes a pip error log and returns a structured list of ALL conflicting package names.
         """
         if not self.llm_available:
             return []
 
         prompt = f"""
-        You are an expert Python dependency conflict analyst. Your task is to read a pip
-        error log and identify the specific, root-cause package names that are in conflict.
-
-        Respond ONLY with a valid, clean JSON list of strings.
+        You are an expert Python dependency conflict analyst. 
+        Your task is to read a pip error log and identify ALL packages involved in the version conflict.
+        
+        RULES:
+        1. If the log says "Package A depends on Package B, but Package C requires Package B==X", you must return ["A", "B", "C"].
+        2. Capture ALL packages that are restricting the target package.
+        3. Do NOT include generic terms like "pip", "python", or "setup.py".
+        4. Respond ONLY with a valid, clean JSON list of strings.
 
         EXAMPLE 1:
-        Log: "ERROR: Cannot install -r file.txt (line 16) and google-api-core==1.34.0 because..."
-        Response: ["google-api-core", "google-generativeai"]
+        Log: "ERROR: Cannot install -r file.txt (line 16) and google-api-core==1.34.0 because these package versions have conflicting dependencies."
+        Response: ["google-api-core", "google-generativeai", "langchain"] (if those others appear in the detailed constraint text)
 
         EXAMPLE 2:
-        Log: "ERROR: a==1.0 requires b<2.0, but you have b==2.5"
-        Response: ["a", "b"]
+        Log: "ERROR: langchain 0.0.1 requires langchain-core<0.1, but you have langchain-core==0.2"
+        Response: ["langchain", "langchain-core"]
 
         Here is the error log to analyze:
         --- ERROR LOG ---
@@ -150,5 +154,4 @@ class ExpertAgent:
         except (json.JSONDecodeError, AttributeError, Exception) as e:
             print(f"  -> LLM_ERROR: Could not get/parse conflict diagnosis: {e}")
             return []
-        
     
