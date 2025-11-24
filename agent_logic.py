@@ -311,7 +311,7 @@ class DependencyAgent:
             
             # CHANGED: Use "." instead of constructed path
             # Note: We split "-e" and the path argument for better compatibility
-            pip_command_project = [python_executable, "-m", "pip", "install", "-e", f".{project_extras}"]
+            pip_command_project = [python_executable, "-m", "pip", "install", "--no-build-isolation", "-e", f".{project_extras}"]
             
             _, stderr_project, returncode_project = run_command(pip_command_project)
             
@@ -367,7 +367,7 @@ class DependencyAgent:
             print(f"\n--> Probe Step 2: Installing project from current directory ('.')...")
             
             # CHANGED: Use "." instead of constructed path
-            pip_command_project = [python_executable, "-m", "pip", "install", "-e", f".{project_extras}"]
+            pip_command_project = [python_executable, "-m", "pip", "install", "--no-build-isolation", f".{project_extras}"]
             
             _, stderr_project, returncode_project = run_command(pip_command_project)
             if returncode_project != 0:
