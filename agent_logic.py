@@ -353,8 +353,7 @@ class DependencyAgent:
                     f_write.write(f"{package_to_update}=={new_version}{marker_part}\n")
                 else:
                     f_write.write(f"{line}\n")
-
-        pip_command_core = [python_executable, "-m", "pip", "install", "-r", str(temp_reqs_path.resolve())]
+        pip_command_core = [python_executable, "-m", "pip", "install", "--no-build-isolation", "-r", str(temp_reqs_path.resolve())]
         _, stderr_core, returncode_core = run_command(pip_command_core)
         if returncode_core != 0:
             summary = self._get_error_summary(stderr_core)
