@@ -63,28 +63,42 @@ class ExpertAgent:
 
     def diagnose_conflict_from_log(self, error_log: str) -> list[str]:
         """
-        Extracts ALL conflicting package NAMES (no versions).
-        Used by the Agent to build the 'Updatable Blockers' list.
+        Extracts ALL conflicting package names using "Scorched Earth" Regex.
+        PURE DETERMINISTIC: No LLM fallback.
         """
         found_packages = set()
         
-        # 1. Regex for names associated with version constraints
-        pattern_strict = re.compile(r"(?P<name>[a-zA-Z0-9\-_]+)(?:==|>=|<=|~=|!=|<|>)")
+        # 1. Standard: "pkg==1.0", "pkg>=1.0"
+        pattern_std = re.compile(r"(?P<name>[a-zA-Z0-9\-_]+)(?:==|>=|<=|~=|!=|<|>)")
         
-        # 2. Regex for natural language "Conflict between A and B"
-        conflict_pattern = re.compile(r"(?:between|dependencies|among)\s+(`|')?([a-zA-Z0-9\-_,\s]+)(`|')?", re.IGNORECASE)
-
-        for match in pattern_strict.finditer(error_log):
-            name = match.group('name').lower()
-            if self._is_valid_package_name(name): found_packages.add(name)
-
-        for match in conflict_pattern.finditer(error_log):
-            tokens = re.split(r'[,\s]+', match.group(2))
-            for t in tokens:
-                clean_t = t.strip("`'").lower()
-                if self._is_valid_package_name(clean_t): found_packages.add(clean_t)
+        # 2. Loose: "pkg 1.0" (Space separated)
+        pattern_space = re.compile(r"(?P<name>[a-zA-Z0-9\-_]+)\s+\d+(?:\.\d+)+")
         
-        # Sanity check: remove '-' if it appeared
+        # 3. Parentheses: "pkg (1.0)" - Common in some pip versions
+        pattern_paren = re.compile(r"(?P<name>[a-zA-Z0-9\-_]+)\s*\(\d+(?:\.\d+)+\)")
+
+        for pat in [pattern_std, pattern_space, pattern_paren]:
+            for match in pat.finditer(error_log):
+                name = match.group('name').lower()
+                if self._is_valid_package_name(name): found_packages.add(name)
+
+        # 4. Contextual Search: Grab words near "conflict", "requirement", "depends"
+        #    This catches packages listed in sentences like "Conflict between A, B, and C"
+        context_keywords = [
+            r"conflict(?:s)?\s+(?:between|among|with|in)\s+((?:[a-zA-Z0-9\-_]+(?:,?\s+and\s+|,?\s*)?)+)",
+            r"requirement\s+((?:[a-zA-Z0-9\-_]+)+)",
+        ]
+        
+        for keyword_pat in context_keywords:
+            for match in re.finditer(keyword_pat, error_log, re.IGNORECASE):
+                # The capture group contains the list of packages (e.g. "pkg-a, pkg-b, and pkg-c")
+                raw_list = match.group(1)
+                tokens = re.split(r'[,\s]+', raw_list)
+                for t in tokens:
+                    clean_t = t.strip("`'").lower()
+                    if self._is_valid_package_name(clean_t):
+                        found_packages.add(clean_t)
+
         if '-' in found_packages: found_packages.remove('-')
         
         return list(found_packages)

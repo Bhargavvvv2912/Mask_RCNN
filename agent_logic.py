@@ -354,7 +354,7 @@ class DependencyAgent:
     def attempt_update_with_healing(self, package, current_version, target_version, dynamic_constraints, baseline_reqs_path, progressive_baseline_path):
         print(f"\n--> Toplevel Attempt: Trying direct update to {package}=={target_version}")
         
-        success, result_data, stderr = self._try_install_and_validate(
+        success, result_data, toplevel_stderr = self._try_install_and_validate(
             package, target_version, dynamic_constraints, baseline_reqs_path, is_probe=False
         )
         
@@ -366,7 +366,9 @@ class DependencyAgent:
         
         # --- LEVEL 1 HEALING ---
         print("--> Action: Entering Level 1 Healing with 'Filter-Then-Scan' strategy.")
-        healed_version = self._heal_with_filter_and_scan(package, current_version, target_version, baseline_reqs_path)
+        
+        # UNPACK THE NEW RETURN VALUE (healed_ver, rich_log)
+        healed_version, level1_stderr = self._heal_with_filter_and_scan(package, current_version, target_version, baseline_reqs_path)
         
         if healed_version and healed_version != current_version:
              print(f"--> Healing Result: Level 1 Succeeded. Found new working version: {healed_version}")
@@ -375,9 +377,12 @@ class DependencyAgent:
         # --- ESCALATION TO LEVEL 2 ---
         print(f"\n--> Action: Level 1 Healing failed for '{package}'. Escalating to Level 2 'Co-Resolution Expert'.")
         
+        # DECISION: Use the Level 1 log if available, as it contains specific conflict details
+        best_error_log = level1_stderr if level1_stderr else toplevel_stderr
+
         # 1. Diagnose the blockers
         print("    -> Step 1: Diagnosing blockers...")
-        blockers = self.expert.diagnose_conflict_from_log(stderr)
+        blockers = self.expert.diagnose_conflict_from_log(best_error_log)
         
         # 2. Feasibility Check
         print(f"    -> Step 2: Checking feasibility. Diagnosed blockers: {blockers}")
@@ -446,9 +451,12 @@ class DependencyAgent:
         for attempt in range(1, 4):
             print(f"\n    -> [Co-Resolution Attempt {attempt}/3] Requesting Expert Plan...")
             
+            # Pass the Best Error Log for the first attempt, then use history
+            current_error_log = best_error_log if attempt == 1 else "Previous plan failed"
+            
             co_resolution_plan = self.expert.propose_co_resolution(
                 target_package=package, 
-                error_log=stderr if attempt == 1 else "Previous plan failed", 
+                error_log=current_error_log, 
                 available_updates=updatable_blockers,
                 current_versions=current_versions_map,
                 history=history
@@ -483,12 +491,14 @@ class DependencyAgent:
         
     def _heal_with_filter_and_scan(self, package, last_good_version, failed_version, baseline_reqs_path):
         start_group(f"Healing '{package}': Filter-Then-Scan Strategy")
+        
+        last_stderr = ""  # <--- Store the error log for the Expert Agent
 
         print("\n--- Phase 1: Filtering for compatible versions ---")
         candidate_versions = self.get_all_versions_between(package, last_good_version, failed_version)
         if not candidate_versions:
             print("No intermediate versions to test."); end_group()
-            return last_good_version
+            return last_good_version, ""
 
         fixed_constraints = []
         with open(baseline_reqs_path, 'r') as f:
@@ -506,7 +516,8 @@ class DependencyAgent:
         for version in reversed(candidate_versions):
             print(f"  -> Checking compatibility of {package}=={version}...")
             requirements_list_for_check = fixed_constraints + [f"{package}=={version}"]
-            # FIXED: Added --no-build-isolation
+            
+            # FIXED: Added --no-build-isolation to avoid legacy build failures
             pip_command = [python_executable, "-m", "pip", "install", "--no-build-isolation", "--dry-run"] + requirements_list_for_check
             
             _, stderr, returncode = run_command(pip_command, display_command=False)
@@ -515,6 +526,7 @@ class DependencyAgent:
                 print(f"     -- Compatible.")
                 installable_versions.append(version)
             else:
+                last_stderr = stderr  # <--- Capture the rich error log
                 summary = self._get_error_summary(stderr)
                 print(f"     -- Incompatible. Diagnosis: {summary}")
         
@@ -524,7 +536,7 @@ class DependencyAgent:
         if not installable_versions:
             print("Result: No compatible versions were found. Reverting to last known good version.")
             end_group()
-            return last_good_version
+            return last_good_version, last_stderr
         
         print(f"Found {len(installable_versions)} compatible versions to test: {installable_versions}")
 
@@ -535,11 +547,11 @@ class DependencyAgent:
             if success:
                 print(f"\nSUCCESS: Found latest working version: {package}=={version_to_test}")
                 end_group()
-                return version_to_test
+                return version_to_test, "" # Success = empty error log
         
         print("\nResult: No compatible version passed validation. Reverting to last known good version.")
         end_group()
-        return last_good_version
+        return last_good_version, last_stderr
     
     def get_all_versions_between(self, package_name, start_ver_str, end_ver_str):
         try:
