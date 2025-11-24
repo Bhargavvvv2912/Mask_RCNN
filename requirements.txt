@@ -1,13 +1,19 @@
-numpy
+# Pin Numpy < 2.0 because TensorFlow 2.x is not yet compatible with Numpy 2.0
+numpy<2.0.0
 scipy
 Pillow
 cython
 matplotlib
 scikit-image
-# The code explicitly imports keras.engine, which was removed in Keras 2.4
-tensorflow<2.0.0
-keras>=2.0.8, <2.4
+
+# Install the latest TensorFlow allowed (likely 2.16 or 2.17)
+tensorflow
+
+# CRITICAL: We must BLOCK Keras 3.0. 
+# Keras 2.15 and older still have 'keras.engine', which Mask_RCNN needs.
+keras<3.0.0
+
 opencv-python
-h5py<3.0.0
+h5py
 imgaug
 IPython[all]
