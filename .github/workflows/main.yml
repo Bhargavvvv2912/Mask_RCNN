@@ -9,22 +9,15 @@ jobs:
     
     defaults:
       run:
-        # The default working directory is now the root, where the agent's code lives.
         working-directory: ${{ github.workspace }}
 
     steps:
-      # --- START OF THE DEFINITIVE FIX ---
-      # STEP 1: Check out the AGENT's repository. This brings in dependency_agent.py etc.
-      - name: Checkout Agent Repository
+      # STEP 1: Check out YOUR repository (which contains Agent + Mask_RCNN code)
+      - name: Checkout Repository
         uses: actions/checkout@v4
 
-      # STEP 2: Check out the TARGET repository into a specific subdirectory.
-      - name: Clone Mask R-CNN Repository
-        uses: actions/checkout@v4
-        with:
-          repository: matterport/Mask_RCNN
-          path: Mask_RCNN # Clone it into a folder named 'Mask_RCNN'
-      # --- END OF THE DEFINITIVE FIX ---
+      # REMOVED: The extra "Clone Mask R-CNN" step. 
+      # Since you are running this IN your fork, the code is already here from Step 1.
 
       - name: Install System Dependencies
         run: |
@@ -44,7 +37,7 @@ jobs:
             packaging \
             "pip-tools==6.13.0"
 
-      - name: Cache pip packages for the Target
+      - name: Cache pip packages
         uses: actions/cache@v3
         with:
           path: ~/.cache/pip
@@ -54,6 +47,7 @@ jobs:
         run: python dependency_agent.py
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          # Optional config env vars if your agent uses them
           PROJECT_ID: "mask_rcnn"
       
       - name: Commit and push changes if any
@@ -61,20 +55,22 @@ jobs:
           git config --global user.name 'AURA Dependency Agent'
           git config --global user.email 'aura-agent@users.noreply.github.com'
           
-          TARGET_FILE="Mask_RCNN/requirements.txt"
+          # FIX 1: Target the requirements.txt in the ROOT directory
+          TARGET_FILE="requirements.txt"
           
-          # Clean up agent's temp directories before checking git status.
-          rm -rf temp_venv final_venv bootstrap_venv temp_pip_check initial_check_venv
+          # FIX 2: Clean up ALL temp directories before status check
+          # Added 'temp_co_res_venv' which was showing as untracked
+          rm -rf temp_venv final_venv bootstrap_venv temp_pip_check initial_check_venv temp_co_res_venv
           
+          # Add the modified file
           git add $TARGET_FILE
-          if git diff-index --quiet HEAD; then
+          
+          # Check if we actually have STAGED changes to commit
+          if git diff --staged --quiet; then
             echo "No dependency changes to commit."
             exit 0
           fi
           
           echo "Dependencies have changed. Committing and pushing..."
           git commit -m "chore(deps): Autonomously manage Mask R-CNN dependencies [skip ci]"
-          # This push will commit to YOUR agent's repository. This is another architectural decision.
-          # If you want to push to the Mask_RCNN repo, the checkout logic needs to be different.
-          # For now, this is the simplest, most correct setup.
           git push
