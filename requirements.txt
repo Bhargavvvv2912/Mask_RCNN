@@ -1,4 +1,4 @@
--e git+https://github.com/Bhargavvvv2912/Mask_RCNN@8bc2ce7fdc8762c266e274efa976c0409c935f1f#egg=mask_rcnn
+-e git+https://github.com/Bhargavvvv2912/Mask_RCNN@1765dcb08b8138306d3dd3623a738e0603f73c19#egg=mask_rcnn
 Cython==3.2.4
 ImageIO==2.37.2
 Jinja2==3.1.6
@@ -127,8 +127,8 @@ pandocfilters==1.5.1
 parso==0.8.6
 partd==1.4.2
 pexpect==4.9.0
-pillow==12.1.0
-platformdirs==4.5.1
+pillow==12.1.1
+platformdirs==4.7.0
 pluggy==1.6.0
 ply==3.11
 prometheus_client==0.24.1
