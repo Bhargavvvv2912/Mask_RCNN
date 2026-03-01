@@ -1,4 +1,4 @@
--e git+https://github.com/Bhargavvvv2912/Mask_RCNN@00d62488211ee78b4a5b719ad6bf382e0f751c5b#egg=mask_rcnn
+-e git+https://github.com/Bhargavvvv2912/Mask_RCNN@44f4c756d770d47130aff9ff10366fb60a2fa5ed#egg=mask_rcnn
 Cython==3.2.4
 ImageIO==2.37.2
 Jinja2==3.1.6
