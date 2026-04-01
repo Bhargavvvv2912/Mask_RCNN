@@ -1,4 +1,4 @@
--e git+https://github.com/Bhargavvvv2912/Mask_RCNN@41adb6ec7957ff914db5f7ac25fc2dd407f2d87e#egg=mask_rcnn
+-e git+https://github.com/Bhargavvvv2912/Mask_RCNN@61383f48cc3f7381b92f0f713626415ddca1defe#egg=mask_rcnn
 Cython==3.2.4
 ImageIO==2.37.2
 Jinja2==3.1.6
@@ -12,7 +12,7 @@ Sphinx==9.0.4
 Werkzeug==3.1.7
 absl-py==2.4.0
 aiohappyeyeballs==2.6.1
-aiohttp==3.13.4
+aiohttp==3.13.5
 aiosignal==1.4.0
 alabaster==1.0.0
 annotated-types==0.7.0
@@ -118,11 +118,11 @@ numpy==2.4.4
 opencv-python==4.13.0.92
 opt_einsum==3.4.0
 optree==0.19.0
-orjson==3.11.7
+orjson==3.11.8
 outcome==1.3.0.post0
 overrides==7.7.0
 packaging==25.0
-pandas==3.0.1
+pandas==3.0.2
 pandocfilters==1.5.1
 parso==0.8.6
 partd==1.4.2
