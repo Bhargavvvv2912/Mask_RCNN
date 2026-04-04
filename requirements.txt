@@ -1,4 +1,4 @@
--e git+https://github.com/Bhargavvvv2912/Mask_RCNN@61383f48cc3f7381b92f0f713626415ddca1defe#egg=mask_rcnn
+-e git+https://github.com/Bhargavvvv2912/Mask_RCNN@0ffe4d0037a15a64822aa675e1a1b764cf269373#egg=mask_rcnn
 Cython==3.2.4
 ImageIO==2.37.2
 Jinja2==3.1.6
@@ -6,10 +6,10 @@ Markdown==3.10.2
 MarkupSafe==3.0.3
 PyYAML==6.0.3
 Pygments==2.20.0
-SQLAlchemy==2.0.48
+SQLAlchemy==2.0.49
 Send2Trash==2.1.0
 Sphinx==9.0.4
-Werkzeug==3.1.7
+Werkzeug==3.1.8
 absl-py==2.4.0
 aiohappyeyeballs==2.6.1
 aiohttp==3.13.5
@@ -29,8 +29,8 @@ beautifulsoup4==4.14.3
 bleach==6.3.0
 certifi==2026.2.25
 cffi==2.0.0
-charset-normalizer==3.4.6
-click==8.3.1
+charset-normalizer==3.4.7
+click==8.3.2
 cloudpickle==3.1.2
 comm==0.2.3
 contourpy==1.3.3
@@ -87,13 +87,13 @@ jupyter_core==5.9.1
 jupyter_server==2.17.0
 jupyter_server_terminals==0.5.4
 jupyterlab_pygments==0.3.0
-keras==3.13.2
+keras==3.14.0
 kiwisolver==1.5.0
 langchain-community==0.3.31
 langchain-core==0.3.83
 langchain-text-splitters==0.3.11
 langchain==0.3.28
-langsmith==0.7.23
+langsmith==0.7.25
 lark==1.3.1
 lazy-loader==0.5
 libclang==18.1.1
@@ -127,7 +127,7 @@ pandocfilters==1.5.1
 parso==0.8.6
 partd==1.4.2
 pexpect==4.9.0
-pillow==12.1.1
+pillow==12.2.0
 platformdirs==4.9.4
 pluggy==1.6.0
 ply==3.11
@@ -194,7 +194,7 @@ trio==0.33.0
 typing-inspect==0.9.0
 typing-inspection==0.4.2
 typing_extensions==4.15.0
-tzdata==2025.3
+tzdata==2026.1
 uri-template==1.3.0
 urllib3==2.6.3
 uuid_utils==0.14.1
