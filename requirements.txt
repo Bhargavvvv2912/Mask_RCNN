@@ -1,4 +1,4 @@
--e git+https://github.com/Bhargavvvv2912/Mask_RCNN@0ffe4d0037a15a64822aa675e1a1b764cf269373#egg=mask_rcnn
+-e git+https://github.com/Bhargavvvv2912/Mask_RCNN@2706d4d70c895e614b17e6a9dba1e7950109b3e8#egg=mask_rcnn
 Cython==3.2.4
 ImageIO==2.37.2
 Jinja2==3.1.6
@@ -93,7 +93,7 @@ langchain-community==0.3.31
 langchain-core==0.3.83
 langchain-text-splitters==0.3.11
 langchain==0.3.28
-langsmith==0.7.25
+langsmith==0.7.26
 lark==1.3.1
 lazy-loader==0.5
 libclang==18.1.1
