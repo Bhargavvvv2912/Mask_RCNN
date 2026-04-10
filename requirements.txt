@@ -1,4 +1,4 @@
--e git+https://github.com/Bhargavvvv2912/Mask_RCNN@2706d4d70c895e614b17e6a9dba1e7950109b3e8#egg=mask_rcnn
+-e git+https://github.com/Bhargavvvv2912/Mask_RCNN@5378365acdc8da447d45816ea30f22ac818013fb#egg=mask_rcnn
 Cython==3.2.4
 ImageIO==2.37.2
 Jinja2==3.1.6
@@ -56,7 +56,7 @@ frozenlist==1.8.0
 fsspec==2026.3.0
 gast==0.7.0
 google-pasta==0.2.0
-greenlet==3.3.2
+greenlet==3.4.0
 grpcio==1.80.0
 h11==0.16.0
 h5py==3.16.0
@@ -90,10 +90,10 @@ jupyterlab_pygments==0.3.0
 keras==3.14.0
 kiwisolver==1.5.0
 langchain-community==0.3.31
-langchain-core==0.3.83
+langchain-core==0.3.84
 langchain-text-splitters==0.3.11
 langchain==0.3.28
-langsmith==0.7.26
+langsmith==0.7.30
 lark==1.3.1
 lazy-loader==0.5
 libclang==18.1.1
@@ -110,7 +110,7 @@ multidict==6.7.1
 mypy_extensions==1.1.0
 namex==0.1.0
 nbclient==0.10.4
-nbconvert==7.17.0
+nbconvert==7.17.1
 nbformat==5.10.4
 nest-asyncio==1.6.0
 networkx==3.6.1
@@ -128,10 +128,10 @@ parso==0.8.6
 partd==1.4.2
 pexpect==4.9.0
 pillow==12.2.0
-platformdirs==4.9.4
+platformdirs==4.9.6
 pluggy==1.6.0
 ply==3.11
-prometheus_client==0.24.1
+prometheus_client==0.25.0
 prompt_toolkit==3.0.52
 propcache==0.4.1
 protobuf==7.34.1
@@ -144,7 +144,7 @@ pydantic==2.12.5
 pydantic_core==2.41.5
 pyparsing==3.3.2
 pytest-asyncio==1.3.0
-pytest==9.0.2
+pytest==9.0.3
 python-dateutil==2.9.0.post0
 python-dotenv==1.2.2
 python-json-logger==4.1.0
