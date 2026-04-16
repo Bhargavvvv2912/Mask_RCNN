@@ -1,4 +1,4 @@
--e git+https://github.com/Bhargavvvv2912/Mask_RCNN@b85bf6d910ebb98aadc22541fc41bac8315e28f8#egg=mask_rcnn
+-e git+https://github.com/Bhargavvvv2912/Mask_RCNN@d7a3722c0ed59015393a62d5429ef39c1202b35f#egg=mask_rcnn
 Cython==3.2.4
 ImageIO==2.37.2
 Jinja2==3.1.6
@@ -93,7 +93,7 @@ langchain-community==0.3.31
 langchain-core==0.3.84
 langchain-text-splitters==0.3.11
 langchain==0.3.28
-langsmith==0.7.30
+langsmith==0.7.32
 lark==1.3.1
 lazy-loader==0.5
 libclang==18.1.1
@@ -140,8 +140,8 @@ ptyprocess==0.7.0
 pure_eval==0.2.3
 pycparser==3.0
 pydantic-settings==2.13.1
-pydantic==2.12.5
-pydantic_core==2.41.5
+pydantic==2.13.1
+pydantic_core==2.46.1
 pyparsing==3.3.2
 pytest-asyncio==1.3.0
 pytest==9.0.3
@@ -206,5 +206,5 @@ wrapt==2.1.2
 xxhash==3.6.0
 yarl==1.23.0
 zict==3.0.0
-zipp==3.23.0
+zipp==3.23.1
 zstandard==0.25.0
