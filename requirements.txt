@@ -1,4 +1,4 @@
--e git+https://github.com/Bhargavvvv2912/Mask_RCNN@3210c327a4d17d7714b246bd2cdf7d74907100ee#egg=mask_rcnn
+-e git+https://github.com/Bhargavvvv2912/Mask_RCNN@fddabcef8f77aabefd40b3759b8ebcaba56ff45a#egg=mask_rcnn
 Cython==3.2.4
 ImageIO==2.37.2
 Jinja2==3.1.6
@@ -63,7 +63,7 @@ h5py==3.16.0
 httpcore==1.0.9
 httpx-sse==0.4.3
 httpx==0.28.1
-idna==3.13
+idna==3.15
 imagesize==2.0.0
 imgaug==0.4.0
 importlib_metadata==9.0.0
@@ -122,7 +122,7 @@ orjson==3.11.9
 outcome==1.3.0.post0
 overrides==7.7.0
 packaging==25.0
-pandas==3.0.2
+pandas==3.0.3
 pandocfilters==1.5.1
 parso==0.8.7
 partd==1.4.2
@@ -152,7 +152,7 @@ pytz==2025.2
 pyzmq==27.1.0
 referencing==0.37.0
 requests-toolbelt==1.0.0
-requests==2.33.1
+requests==2.34.0
 rfc3339-validator==0.1.4
 rfc3986-validator==0.1.1
 rfc3987-syntax==1.1.0
@@ -197,7 +197,7 @@ typing_extensions==4.15.0
 tzdata==2026.2
 uri-template==1.3.0
 urllib3==2.7.0
-uuid_utils==0.14.1
+uuid_utils==0.15.0
 wcwidth==0.7.0
 webcolors==25.10.0
 webencodings==0.5.1
