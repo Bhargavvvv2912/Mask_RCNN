@@ -1,4 +1,4 @@
--e git+https://github.com/Bhargavvvv2912/Mask_RCNN@fddabcef8f77aabefd40b3759b8ebcaba56ff45a#egg=mask_rcnn
+-e git+https://github.com/Bhargavvvv2912/Mask_RCNN@a97b32439b289f42fff81e2c90f670812124afa6#egg=mask_rcnn
 Cython==3.2.4
 ImageIO==2.37.2
 Jinja2==3.1.6
@@ -50,7 +50,7 @@ executing==2.2.1
 faiss-cpu==1.13.2
 fastjsonschema==2.21.2
 flatbuffers==25.12.19
-fonttools==4.62.1
+fonttools==4.63.0
 fqdn==1.5.1
 frozenlist==1.8.0
 fsspec==2026.4.0
@@ -93,7 +93,7 @@ langchain-community==0.3.31
 langchain-core==0.3.86
 langchain-text-splitters==0.3.11
 langchain==0.3.30
-langsmith==0.8.3
+langsmith==0.8.5
 lark==1.3.1
 lazy-loader==0.5
 libclang==18.1.1
@@ -114,7 +114,7 @@ nbconvert==7.17.1
 nbformat==5.10.4
 nest-asyncio==1.6.0
 networkx==3.6.1
-numpy==2.4.4
+numpy==2.4.5
 opencv-python==4.13.0.92
 opt_einsum==3.4.0
 optree==0.19.1
@@ -152,7 +152,7 @@ pytz==2025.2
 pyzmq==27.1.0
 referencing==0.37.0
 requests-toolbelt==1.0.0
-requests==2.34.0
+requests==2.34.2
 rfc3339-validator==0.1.4
 rfc3986-validator==0.1.1
 rfc3987-syntax==1.1.0
