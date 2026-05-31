@@ -1,4 +1,4 @@
--e git+https://github.com/Bhargavvvv2912/Mask_RCNN@95648ae192b04f9ea652a8914c0726a35edca523#egg=mask_rcnn
+-e git+https://github.com/Bhargavvvv2912/Mask_RCNN@679e1b95b005a5575b2ee8c37104003acc303bac#egg=mask_rcnn
 Authlib==1.7.2
 Cython==3.2.5
 ImageIO==2.37.2
@@ -81,14 +81,14 @@ h5py==3.16.0
 httpcore==1.0.9
 httpx-sse==0.4.3
 httpx==0.28.1
-idna==3.16
+idna==3.17
 imagesize==2.0.0
 imgaug==0.4.0
 importlib_metadata==9.0.0
 iniconfig==2.3.0
 intersphinx_registry==0.2605.28
 ipykernel==7.2.0
-ipython==9.13.0
+ipython==9.14.0
 ipython_pygments_lexers==1.1.1
 isoduration==20.11.0
 jaraco.classes==3.4.0
@@ -121,7 +121,7 @@ jupyter_ai_router==0.0.5
 jupyter_ai_tools==0.5.1
 jupyter_client==8.8.0
 jupyter_core==5.9.1
-jupyter_server==2.18.2
+jupyter_server==2.19.0
 jupyter_server_documents==0.2.2
 jupyter_server_fileid==0.9.3
 jupyter_server_mcp==0.2.1
@@ -140,7 +140,7 @@ langchain-community==0.3.31
 langchain-core==0.3.86
 langchain-text-splitters==0.3.11
 langchain==0.3.30
-langsmith==0.8.6
+langsmith==0.8.7
 lark==1.3.1
 lazy-loader==0.5
 libclang==18.1.1
@@ -149,7 +149,7 @@ markdown-it-py==4.2.0
 marshmallow==3.26.2
 matplotlib-inline==0.2.2
 matplotlib==3.10.9
-mcp==1.27.1
+mcp==1.27.2
 mdurl==0.1.2
 mistune==3.2.1
 ml_dtypes==0.5.4
@@ -218,7 +218,7 @@ rfc3987-syntax==1.1.0
 rich-rst==2.0.1
 rich==15.0.0
 roman-numerals==4.1.0
-rpds-py==0.30.0
+rpds-py==2026.5.1
 scikit-image==0.26.0
 scipy==1.17.1
 shapely==2.1.2
@@ -239,7 +239,7 @@ sphinxcontrib-serializinghtml==2.0.0
 sqlite-anyio==0.2.8
 sse-starlette==3.4.4
 stack-data==0.6.3
-starlette==1.1.0
+starlette==1.2.1
 tblib==3.2.2
 tenacity==9.1.4
 tensorboard-data-server==0.7.2
