@@ -1,4 +1,4 @@
--e git+https://github.com/Bhargavvvv2912/Mask_RCNN@679e1b95b005a5575b2ee8c37104003acc303bac#egg=mask_rcnn
+-e git+https://github.com/Bhargavvvv2912/Mask_RCNN@95f19d4af476f8a7a28cf3183b4a7474d09e1028#egg=mask_rcnn
 Authlib==1.7.2
 Cython==3.2.5
 ImageIO==2.37.2
@@ -140,7 +140,7 @@ langchain-community==0.3.31
 langchain-core==0.3.86
 langchain-text-splitters==0.3.11
 langchain==0.3.30
-langsmith==0.8.7
+langsmith==0.8.8
 lark==1.3.1
 lazy-loader==0.5
 libclang==18.1.1
@@ -206,7 +206,7 @@ pytest==9.0.3
 python-dateutil==2.9.0.post0
 python-dotenv==1.2.2
 python-json-logger==4.1.0
-python-multipart==0.0.29
+python-multipart==0.0.30
 pytz==2025.2
 pyzmq==27.1.0
 referencing==0.37.0
