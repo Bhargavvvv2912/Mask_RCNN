@@ -1,4 +1,4 @@
--e git+https://github.com/Bhargavvvv2912/Mask_RCNN@fd14c7802eecf2b5fd3c073c32fecfee112f8d85#egg=mask_rcnn
+-e git+https://github.com/Bhargavvvv2912/Mask_RCNN@b5f618c33245892c58ca2e27685cb05fa9bddb55#egg=mask_rcnn
 Authlib==1.7.2
 Cython==3.2.5
 ImageIO==2.37.2
@@ -37,7 +37,7 @@ beautifulsoup4==4.15.0
 bleach==6.4.0
 cachetools==7.1.4
 caio==0.9.25
-certifi==2026.5.20
+certifi==2026.6.17
 cffi==2.0.0
 charset-normalizer==3.4.7
 click==8.4.1
@@ -73,7 +73,7 @@ frozenlist==1.8.0
 fsspec==2026.6.0
 gast==0.7.0
 google-pasta==0.2.0
-greenlet==3.5.1
+greenlet==3.5.2
 griffelib==2.0.2
 grpcio==1.81.1
 h11==0.16.0
@@ -121,12 +121,12 @@ jupyter_ai_router==0.0.5
 jupyter_ai_tools==0.5.2
 jupyter_client==8.9.1
 jupyter_core==5.9.1
-jupyter_server==2.19.0
-jupyter_server_documents==0.2.4
+jupyter_server==2.20.0
+jupyter_server_documents==0.2.5
 jupyter_server_fileid==0.9.3
 jupyter_server_mcp==0.2.1
 jupyter_server_terminals==0.5.4
-jupyterlab==4.5.8
+jupyterlab==4.6.0
 jupyterlab_chat==0.22.1
 jupyterlab_commands_toolkit==0.1.6
 jupyterlab_eventlistener==0.4.0
@@ -140,7 +140,7 @@ langchain-community==0.3.31
 langchain-core==0.3.86
 langchain-text-splitters==0.3.11
 langchain==0.3.30
-langsmith==0.8.16
+langsmith==0.8.17
 lark==1.3.1
 lazy-loader==0.5
 libclang==18.1.1
@@ -149,18 +149,19 @@ markdown-it-py==4.2.0
 marshmallow==3.26.2
 matplotlib-inline==0.2.2
 matplotlib==3.11.0
-mcp==1.27.2
+mcp==1.28.0
 mdurl==0.1.2
 mistune==3.2.1
 ml_dtypes==0.5.4
 more-itertools==11.1.0
-msgpack==1.2.0
+msgpack==1.2.1
 multidict==6.7.1
 mypy_extensions==1.1.0
 namex==0.1.0
 nbclient==0.11.0
 nbconvert==7.17.1
 nbformat==5.10.4
+nest-asyncio2==1.7.2
 nest-asyncio==1.6.0
 networkx==3.6.1
 notebook_shim==0.2.4
@@ -261,7 +262,7 @@ tzdata==2026.2
 uncalled-for==0.3.2
 uri-template==1.3.0
 urllib3==2.7.0
-uuid_utils==0.16.0
+uuid_utils==0.16.2
 uvicorn==0.49.0
 watchfiles==1.2.0
 wcwidth==0.8.1
