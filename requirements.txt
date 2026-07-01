@@ -1,6 +1,6 @@
--e git+https://github.com/Bhargavvvv2912/Mask_RCNN@01da032735314d40255412483f31c52e79a8d5bc#egg=mask_rcnn
+-e git+https://github.com/Bhargavvvv2912/Mask_RCNN@e934f5565630dff22b4f3310273065900e3992e5#egg=mask_rcnn
 Authlib==1.7.2
-Cython==3.2.6
+Cython==3.2.8
 ImageIO==2.37.2
 Jinja2==3.1.6
 Markdown==3.10.2
@@ -22,7 +22,7 @@ aiosignal==1.4.0
 alabaster==1.0.0
 annotated-types==0.7.0
 anyio==4.14.1
-argcomplete==3.6.3
+argcomplete==3.7.0
 argon2-cffi-bindings==25.1.0
 argon2-cffi==25.1.0
 arrow==1.4.0
@@ -47,7 +47,7 @@ contourpy==1.3.3
 cryptography==49.0.0
 curio==1.6
 cycler==0.12.1
-cyclopts==4.19.0
+cyclopts==4.20.0
 dask==2026.6.0
 dataclasses-json==0.6.7
 debugpy==1.8.21
@@ -97,7 +97,7 @@ jaraco.context==6.1.2
 jaraco.functools==4.5.0
 jedi==0.19.2
 jeepney==0.9.0
-joserfc==1.7.1
+joserfc==1.7.2
 json5==0.15.0
 jsonpatch==1.33
 jsonpath-ng==1.8.0
@@ -113,7 +113,7 @@ jupyter-events==0.12.1
 jupyter-lsp==2.3.1
 jupyter-server-ydoc==2.4.0
 jupyter-ydoc==3.4.1
-jupyter_ai==3.0.0
+jupyter_ai==3.0.1
 jupyter_ai_acp_client==0.1.5
 jupyter_ai_chat_commands==0.0.4
 jupyter_ai_magics==2.31.7
@@ -128,7 +128,7 @@ jupyter_server_documents==0.2.5
 jupyter_server_fileid==0.9.3
 jupyter_server_mcp==0.2.1
 jupyter_server_terminals==0.5.4
-jupyterlab==4.6.0
+jupyterlab==4.6.1
 jupyterlab_chat==0.22.1
 jupyterlab_commands_toolkit==0.1.6
 jupyterlab_eventlistener==0.4.0
@@ -142,7 +142,7 @@ langchain-community==0.3.31
 langchain-core==0.3.86
 langchain-text-splitters==0.3.11
 langchain==0.3.30
-langsmith==0.9.3
+langsmith==0.9.4
 lark==1.3.1
 lazy-loader==0.5
 libclang==18.1.1
@@ -177,7 +177,7 @@ orjson==3.11.9
 outcome==1.3.0.post0
 overrides==7.7.0
 packaging==25.0
-pandas==3.0.3
+pandas==3.0.4
 pandocfilters==1.5.1
 parso==0.8.7
 partd==1.4.2
@@ -221,7 +221,7 @@ rfc3987-syntax==1.1.0
 rich-rst==2.0.2
 rich==15.0.0
 roman-numerals==4.1.0
-rpds-py==2026.5.1
+rpds-py==2026.6.3
 scikit-image==0.26.0
 scipy==1.17.1
 shapely==2.1.2
@@ -267,7 +267,7 @@ urllib3==2.7.0
 uuid_utils==0.16.2
 uvicorn==0.49.0
 watchfiles==1.2.0
-wcwidth==0.8.1
+wcwidth==0.8.2
 webcolors==25.10.0
 webencodings==0.5.1
 websocket-client==1.9.0
