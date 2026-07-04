@@ -1,4 +1,4 @@
--e git+https://github.com/Bhargavvvv2912/Mask_RCNN@e934f5565630dff22b4f3310273065900e3992e5#egg=mask_rcnn
+-e git+https://github.com/Bhargavvvv2912/Mask_RCNN@b0c276b96f420d9430f91c08fbf436194faffe63#egg=mask_rcnn
 Authlib==1.7.2
 Cython==3.2.8
 ImageIO==2.37.2
@@ -13,10 +13,10 @@ SecretStorage==3.5.0
 Send2Trash==2.1.0
 Sphinx==9.0.4
 Werkzeug==3.1.8
-absl-py==2.4.0
+absl-py==2.5.0
 agent-client-protocol==0.9.0
 aiofile==3.11.1
-aiohappyeyeballs==2.6.2
+aiohappyeyeballs==2.7.1
 aiohttp==3.14.1
 aiosignal==1.4.0
 alabaster==1.0.0
@@ -117,7 +117,7 @@ jupyter_ai==3.0.1
 jupyter_ai_acp_client==0.1.5
 jupyter_ai_chat_commands==0.0.4
 jupyter_ai_magics==2.31.7
-jupyter_ai_persona_manager==0.0.11
+jupyter_ai_persona_manager==0.0.12
 jupyter_ai_router==0.0.5
 jupyter_ai_tools==0.5.2
 jupyter_builder==1.0.2
@@ -142,7 +142,7 @@ langchain-community==0.3.31
 langchain-core==0.3.86
 langchain-text-splitters==0.3.11
 langchain==0.3.30
-langsmith==0.9.4
+langsmith==0.9.7
 lark==1.3.1
 lazy-loader==0.5
 libclang==18.1.1
@@ -169,7 +169,7 @@ networkx==3.6.1
 notebook_shim==0.2.4
 numpy==2.4.6
 openapi-pydantic==0.5.1
-opencv-python==4.13.0.92
+opencv-python==5.0.0.93
 opentelemetry-api==1.43.0
 opt_einsum==3.4.0
 optree==0.19.1
@@ -183,7 +183,7 @@ parso==0.8.7
 partd==1.4.2
 pathable==0.6.0
 pexpect==4.9.0
-pillow==12.2.0
+pillow==12.3.0
 platformdirs==4.10.0
 pluggy==1.6.0
 ply==3.11
@@ -259,7 +259,7 @@ traitlets==5.15.1
 trio==0.33.0
 typing-inspect==0.9.0
 typing-inspection==0.4.2
-typing_extensions==4.15.0
+typing_extensions==4.16.0
 tzdata==2026.2
 uncalled-for==0.3.2
 uri-template==1.3.0
