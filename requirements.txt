@@ -1,4 +1,4 @@
--e git+https://github.com/Bhargavvvv2912/Mask_RCNN@3cad25e8f2b2571c5eec82174bde6ce13d012311#egg=mask_rcnn
+-e git+https://github.com/Bhargavvvv2912/Mask_RCNN@708a2af66a20259254e5cc9edfbb916061ae10bc#egg=mask_rcnn
 Authlib==1.7.2
 Cython==3.2.8
 ImageIO==2.37.2
@@ -47,7 +47,7 @@ contourpy==1.3.3
 cryptography==49.0.0
 curio==1.6
 cycler==0.12.1
-cyclopts==4.21.0
+cyclopts==4.21.2
 dask==2026.7.1
 dataclasses-json==0.6.7
 debugpy==1.8.21
@@ -120,7 +120,7 @@ jupyter_ai_magics==2.31.7
 jupyter_ai_persona_manager==0.0.12
 jupyter_ai_router==0.0.5
 jupyter_ai_tools==0.5.2
-jupyter_builder==1.1.0
+jupyter_builder==1.1.1
 jupyter_client==8.9.1
 jupyter_core==5.9.1
 jupyter_server==2.20.0
@@ -142,7 +142,7 @@ langchain-community==0.3.31
 langchain-core==0.3.86
 langchain-text-splitters==0.3.11
 langchain==0.3.30
-langsmith==0.10.5
+langsmith==0.10.6
 lark==1.3.1
 lazy-loader==0.5
 libclang==18.1.1
@@ -150,7 +150,7 @@ locket==1.0.0
 markdown-it-py==4.2.0
 marshmallow==3.26.2
 matplotlib-inline==0.2.2
-matplotlib==3.11.0
+matplotlib==3.11.1
 mcp==1.28.1
 mdurl==0.1.2
 mistune==3.3.3
@@ -170,7 +170,7 @@ notebook_shim==0.2.4
 numpy==2.4.6
 openapi-pydantic==0.5.1
 opencv-python==5.0.0.93
-opentelemetry-api==1.43.0
+opentelemetry-api==1.44.0
 opt_einsum==3.4.0
 optree==0.19.1
 orjson==3.11.9
@@ -184,7 +184,7 @@ partd==1.4.2
 pathable==0.6.0
 pexpect==4.9.0
 pillow==12.3.0
-platformdirs==4.10.0
+platformdirs==4.10.1
 pluggy==1.6.0
 ply==3.11
 prometheus_client==0.25.0
@@ -229,7 +229,7 @@ six==1.17.0
 sniffio==1.3.1
 snowballstemmer==3.1.1
 sortedcontainers==2.4.0
-soupsieve==2.8.4
+soupsieve==2.9
 sphinx_rtd_theme==3.1.0
 sphinx_toml==0.0.4
 sphinxcontrib-applehelp==2.0.0
@@ -271,7 +271,7 @@ wcwidth==0.8.2
 webcolors==25.10.0
 webencodings==0.5.1
 websocket-client==1.9.0
-websockets==16.1
+websockets==16.1.1
 wrapt==2.2.2
 xxhash==3.8.1
 yarl==1.24.2
