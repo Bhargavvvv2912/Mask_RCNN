@@ -1,6 +1,6 @@
--e git+https://github.com/Bhargavvvv2912/Mask_RCNN@708a2af66a20259254e5cc9edfbb916061ae10bc#egg=mask_rcnn
+-e git+https://github.com/Bhargavvvv2912/Mask_RCNN@a0ee053924de54b5f909c4967c0c639163e76177#egg=mask_rcnn
 Authlib==1.7.2
-Cython==3.2.8
+Cython==3.2.9
 ImageIO==2.37.2
 Jinja2==3.1.6
 Markdown==3.10.2
@@ -17,10 +17,10 @@ absl-py==2.5.0
 agent-client-protocol==0.9.0
 aiofile==3.11.1
 aiohappyeyeballs==2.7.1
-aiohttp==3.14.1
+aiohttp==3.14.3
 aiosignal==1.4.0
 alabaster==1.0.0
-annotated-types==0.7.0
+annotated-types==0.8.0
 anyio==4.14.2
 argcomplete==3.7.0
 argon2-cffi-bindings==25.1.0
@@ -35,9 +35,9 @@ backports.tarfile==1.2.0
 beartype==0.22.9
 beautifulsoup4==4.15.0
 bleach==6.4.0
-cachetools==7.1.4
+cachetools==7.1.6
 caio==0.9.25
-certifi==2026.6.17
+certifi==2026.7.22
 cffi==2.1.0
 charset-normalizer==3.4.9
 click==8.4.2
@@ -47,7 +47,7 @@ contourpy==1.3.3
 cryptography==49.0.0
 curio==1.6
 cycler==0.12.1
-cyclopts==4.21.2
+cyclopts==4.22.2
 dask==2026.7.1
 dataclasses-json==0.6.7
 debugpy==1.8.21
@@ -74,9 +74,9 @@ frozenlist==1.8.0
 fsspec==2026.6.0
 gast==0.7.0
 google-pasta==0.2.0
-greenlet==3.5.3
+greenlet==3.5.4
 griffelib==2.1.0
-grpcio==1.82.1
+grpcio==1.83.0
 h11==0.16.0
 h5py==3.16.0
 httpcore==1.0.9
@@ -97,7 +97,7 @@ jaraco.context==6.1.2
 jaraco.functools==4.5.0
 jedi==0.19.2
 jeepney==0.9.0
-joserfc==1.7.3
+joserfc==1.7.4
 json5==0.15.0
 jsonpatch==1.33
 jsonpath-ng==1.8.0
@@ -128,7 +128,7 @@ jupyter_server_documents==0.2.5
 jupyter_server_fileid==0.9.3
 jupyter_server_mcp==0.2.1
 jupyter_server_terminals==0.5.4
-jupyterlab==4.6.1
+jupyterlab==4.6.2
 jupyterlab_chat==0.22.1
 jupyterlab_commands_toolkit==0.1.6
 jupyterlab_eventlistener==0.4.0
@@ -142,7 +142,7 @@ langchain-community==0.3.31
 langchain-core==0.3.86
 langchain-text-splitters==0.3.11
 langchain==0.3.30
-langsmith==0.10.6
+langsmith==0.10.10
 lark==1.3.1
 lazy-loader==0.5
 libclang==18.1.1
@@ -153,7 +153,7 @@ matplotlib-inline==0.2.2
 matplotlib==3.11.1
 mcp==1.28.1
 mdurl==0.1.2
-mistune==3.3.3
+mistune==3.3.4
 ml_dtypes==0.5.4
 more-itertools==11.1.0
 msgpack==1.2.1
@@ -177,17 +177,17 @@ orjson==3.11.9
 outcome==1.3.0.post0
 overrides==7.7.0
 packaging==25.0
-pandas==3.0.4
+pandas==3.0.5
 pandocfilters==1.5.1
 parso==0.8.7
 partd==1.4.2
 pathable==0.6.0
 pexpect==4.9.0
 pillow==12.3.0
-platformdirs==4.10.1
+platformdirs==4.11.0
 pluggy==1.6.0
 ply==3.11
-prometheus_client==0.25.0
+prometheus_client==0.26.0
 prompt_toolkit==3.0.52
 propcache==0.5.2
 protobuf==7.35.1
@@ -229,7 +229,7 @@ six==1.17.0
 sniffio==1.3.1
 snowballstemmer==3.1.1
 sortedcontainers==2.4.0
-soupsieve==2.9
+soupsieve==2.9.1
 sphinx_rtd_theme==3.1.0
 sphinx_toml==0.0.4
 sphinxcontrib-applehelp==2.0.0
@@ -240,7 +240,7 @@ sphinxcontrib-jsmath==1.0.1
 sphinxcontrib-qthelp==2.0.0
 sphinxcontrib-serializinghtml==2.0.0
 sqlite-anyio==0.2.10
-sse-starlette==3.4.5
+sse-starlette==3.4.6
 stack-data==0.6.3
 starlette==1.3.1
 tblib==3.2.2
@@ -274,7 +274,7 @@ websocket-client==1.9.0
 websockets==16.1.1
 wrapt==2.2.2
 xxhash==3.8.1
-yarl==1.24.2
+yarl==1.24.5
 zict==3.0.0
 zipp==4.1.0
 zstandard==0.25.0
