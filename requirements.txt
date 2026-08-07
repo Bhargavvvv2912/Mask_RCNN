@@ -1,4 +1,4 @@
--e git+https://github.com/Bhargavvvv2912/Mask_RCNN@fd1c7e3967580cdc53f99deaf4db657d12a86bfc#egg=mask_rcnn
+-e git+https://github.com/Bhargavvvv2912/Mask_RCNN@9cd2a1832a2ddb6f4ed66c7680db79f69992b082#egg=mask_rcnn
 Authlib==1.7.2
 Cython==3.2.9
 ImageIO==2.37.2
@@ -15,14 +15,14 @@ Sphinx==9.0.4
 Werkzeug==3.1.8
 absl-py==2.5.0
 agent-client-protocol==0.9.0
-aiofile==3.11.1
+aiofile==3.12.3
 aiohappyeyeballs==2.7.1
 aiohttp==3.14.3
 aiosignal==1.4.0
 alabaster==1.0.0
 annotated-types==0.8.0
 anyio==4.14.2
-argcomplete==3.7.0
+argcomplete==3.7.2
 argon2-cffi-bindings==25.1.0
 argon2-cffi==25.1.0
 arrow==1.4.0
@@ -35,10 +35,10 @@ backports.tarfile==1.2.0
 beartype==0.22.9
 beautifulsoup4==4.15.0
 bleach==6.4.0
-cachetools==7.1.6
-caio==0.9.25
+cachetools==7.1.7
+caio==0.12.2
 certifi==2026.7.22
-cffi==2.1.0
+cffi==2.1.1
 charset-normalizer==3.4.9
 click==8.4.2
 cloudpickle==3.1.2
@@ -47,7 +47,7 @@ contourpy==1.3.3
 cryptography==50.0.0
 curio==1.6
 cycler==0.12.1
-cyclopts==4.22.3
+cyclopts==4.22.5
 dask==2026.7.1
 dataclasses-json==0.6.7
 debugpy==1.8.21
@@ -63,10 +63,10 @@ docutils==0.22.4
 email-validator==2.3.0
 exceptiongroup==1.3.1
 executing==2.2.1
-faiss-cpu==1.14.3
+faiss-cpu==1.15.0
 fastjsonschema==2.22.1
-fastmcp-slim==3.4.5
-fastmcp==3.4.5
+fastmcp-slim==3.4.6
+fastmcp==3.4.6
 flatbuffers==25.12.19
 fonttools==4.63.0
 fqdn==1.5.1
@@ -89,7 +89,7 @@ importlib_metadata==9.0.0
 iniconfig==2.3.0
 intersphinx_registry==0.2606.25
 ipykernel==7.3.0
-ipython==9.16.0
+ipython==9.16.1
 ipython_pygments_lexers==1.1.1
 isoduration==20.11.0
 jaraco.classes==3.4.0
@@ -106,9 +106,9 @@ jsonref==1.1.0
 jsonschema-path==0.5.0
 jsonschema-specifications==2025.9.1
 jsonschema==4.26.0
-jupyter-collaboration-ui==2.4.1
+jupyter-collaboration-ui==2.4.2
 jupyter-collaboration==4.4.0
-jupyter-docprovider==2.4.1
+jupyter-docprovider==2.4.2
 jupyter-events==0.12.1
 jupyter-lsp==2.3.1
 jupyter-server-ydoc==2.4.0
@@ -124,7 +124,7 @@ jupyter_builder==1.2.1
 jupyter_client==8.9.1
 jupyter_core==5.9.1
 jupyter_server==2.20.0
-jupyter_server_documents==0.2.5
+jupyter_server_documents==0.2.6
 jupyter_server_fileid==0.9.3
 jupyter_server_mcp==0.2.1
 jupyter_server_terminals==0.5.4
@@ -142,7 +142,7 @@ langchain-community==0.3.31
 langchain-core==0.3.86
 langchain-text-splitters==0.3.11
 langchain==0.3.30
-langsmith==0.10.15
+langsmith==0.10.16
 lark==1.3.1
 lazy-loader==0.5
 libclang==18.1.1
@@ -162,7 +162,7 @@ mypy_extensions==1.1.0
 namex==0.1.0
 nbclient==0.11.0
 nbconvert==7.17.1
-nbformat==5.10.4
+nbformat==5.11.0
 nest-asyncio2==1.7.2
 nest-asyncio==1.6.0
 networkx==3.6.1
@@ -229,7 +229,7 @@ six==1.17.0
 sniffio==1.3.1
 snowballstemmer==3.1.1
 sortedcontainers==2.4.0
-soupsieve==2.9.1
+soupsieve==2.9.2
 sphinx_rtd_theme==3.1.0
 sphinx_toml==0.0.4
 sphinxcontrib-applehelp==2.0.0
@@ -240,9 +240,9 @@ sphinxcontrib-jsmath==1.0.1
 sphinxcontrib-qthelp==2.0.0
 sphinxcontrib-serializinghtml==2.0.0
 sqlite-anyio==0.2.10
-sse-starlette==3.4.6
+sse-starlette==3.4.8
 stack-data==0.6.3
-starlette==1.3.1
+starlette==1.4.1
 tblib==3.2.2
 tenacity==9.1.4
 tensorboard-data-server==0.7.2
@@ -254,8 +254,8 @@ testpath==0.6.0
 tifffile==2026.3.3
 tinycss2==1.5.1
 toolz==1.1.0
-tornado==6.5.7
-traitlets==5.16.0
+tornado==6.5.8
+traitlets==5.16.1
 trio==0.33.0
 typing-inspect==0.9.0
 typing-inspection==0.4.2
@@ -265,7 +265,7 @@ uncalled-for==0.3.2
 uri-template==1.3.0
 urllib3==2.7.0
 uuid_utils==0.17.0
-uvicorn==0.52.0
+uvicorn==0.52.1
 watchfiles==1.2.0
 wcwidth==0.8.2
 webcolors==25.10.0
