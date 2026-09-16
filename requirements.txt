@@ -1,4 +1,4 @@
--e git+https://github.com/Bhargavvvv2912/Mask_RCNN@c27ab46382be5601cc8286cd81a5af5ca00dbf94#egg=mask_rcnn
+-e git+https://github.com/Bhargavvvv2912/Mask_RCNN@b4052d4acbb3b678bcc99fe8c22b6eeedf5d22d0#egg=mask_rcnn
 Authlib==1.8.0
 Cython==3.3.0
 ImageIO==2.37.2
@@ -8,7 +8,7 @@ MarkupSafe==3.0.3
 PyJWT==2.14.0
 PyYAML==6.0.3
 Pygments==2.21.0
-SQLAlchemy==2.0.52
+SQLAlchemy==2.0.54
 SecretStorage==3.5.0
 Send2Trash==2.1.0
 Sphinx==9.0.4
@@ -50,7 +50,7 @@ cycler==0.12.1
 cyclopts==4.25.2
 dask==2026.8.0
 dataclasses-json==0.6.7
-debugpy==1.8.21
+debugpy==1.8.22
 decorator==5.3.1
 deepmerge==3.0.1
 defusedxml==0.7.1
@@ -65,8 +65,8 @@ exceptiongroup==1.3.1
 executing==2.2.1
 faiss-cpu==1.15.0
 fastjsonschema==2.22.2
-fastmcp-slim==4.0.3
-fastmcp==4.0.3
+fastmcp-slim==4.0.4
+fastmcp==4.0.4
 flatbuffers==25.12.19
 fonttools==4.65.0
 fqdn==1.5.1
@@ -74,13 +74,15 @@ frozenlist==1.8.0
 fsspec==2026.7.0
 gast==0.7.0
 google-pasta==0.2.0
-greenlet==3.5.5
+greenlet==3.5.6
 griffelib==2.3.0
-grpcio==1.83.1
+grpcio==1.84.0
 h11==0.16.0
 h5py==3.16.0
+httpcore2==2.13.0
 httpcore==1.0.9
 httpx-sse==0.4.3
+httpx2==2.13.0
 httpx==0.28.1
 idna==3.19
 imagesize==2.0.1
@@ -123,7 +125,7 @@ jupyter_ai_tools==0.5.2
 jupyter_builder==1.2.3
 jupyter_client==8.10.0
 jupyter_core==5.9.1
-jupyter_server==2.21.0
+jupyter_server==2.21.1
 jupyter_server_documents==0.2.6
 jupyter_server_fileid==0.9.3
 jupyter_server_mcp==0.2.2
@@ -134,7 +136,7 @@ jupyterlab_commands_toolkit==0.1.6
 jupyterlab_eventlistener==0.4.0
 jupyterlab_notebook_awareness==0.2.0
 jupyterlab_pygments==0.3.0
-jupyterlab_server==2.28.0
+jupyterlab_server==2.28.1
 keras==3.15.1
 keyring==25.7.0
 kiwisolver==1.5.1
@@ -142,7 +144,7 @@ langchain-community==0.3.31
 langchain-core==0.3.86
 langchain-text-splitters==0.3.11
 langchain==0.3.30
-langsmith==0.12.4
+langsmith==0.12.5
 lark==1.3.1
 lazy-loader==0.5
 libclang==18.1.1
@@ -151,6 +153,7 @@ markdown-it-py==4.2.0
 marshmallow==3.26.2
 matplotlib-inline==0.2.2
 matplotlib==3.11.2
+mcp-types==2.2.0
 mcp==2.2.0
 mdurl==0.1.2
 mistune==3.3.4
@@ -189,7 +192,7 @@ pluggy==1.6.0
 ply==3.11
 prometheus_client==0.26.0
 prompt_toolkit==3.0.53
-propcache==0.5.2
+propcache==0.5.4
 protobuf==7.36.1
 psutil==7.2.2
 ptyprocess==0.7.0
@@ -254,18 +257,19 @@ testpath==0.6.0
 tifffile==2026.3.3
 tinycss2==1.5.1
 toolz==1.1.0
-tornado==6.5.8
+tornado==6.5.10
 traitlets==5.16.1
 trio==0.34.0
+truststore==0.10.4
 typing-inspect==0.9.0
 typing-inspection==0.4.4
 typing_extensions==4.16.0
 tzdata==2026.4
 uncalled-for==0.4.0
 uri-template==1.3.0
-urllib3==2.7.0
+urllib3==2.8.0
 uuid_utils==0.17.1
-uvicorn==0.52.4
+uvicorn==0.53.0
 watchfiles==1.2.0
 wcwidth==0.8.3
 webcolors==25.10.0
@@ -274,7 +278,7 @@ websocket-client==1.9.2
 websockets==17.1
 wrapt==2.4.1
 xxhash==4.0.1
-yarl==1.24.5
+yarl==1.25.1
 zict==3.0.0
 zipp==4.1.0
 zstandard==0.25.0
